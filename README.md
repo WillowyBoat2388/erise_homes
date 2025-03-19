@@ -31,7 +31,7 @@ graph TD;
         ACM[AWS Certificate Manager]
         IAM[AWS IAM]
     end
-
+```
 
 1. **IoT Devices** securely connect to **AWS IoT Core** over TLS.  
 2. **IoT Rule Engine** checks if data meets specific thresholds:  
