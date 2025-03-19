@@ -13,11 +13,24 @@ This solution enables real-time monitoring of energy consumption across IoT devi
 ---
 
 ## **2. High-Level Architecture**
+### IoT Monitoring Architecture
 
-IoT Edge | | (TLS, MQTT/HTTPS) v AWS IoT Core --- IoT Rule ---> Kinesis Data Firehose ---> Amazon S3 ---> QuickSight |
-+--- IoT Rule ---> AWS Lambda ---> Amazon SNS
+#### Data Flow
 
-[ Security Management: AWS KMS, AWS Certificate Manager, AWS IAM ]
+```mermaid
+graph TD;
+    IoTEdge[IoT Edge] -->|TLS, MQTT/HTTPS| IoTCore[AWS IoT Core]
+    IoTCore -->|IoT Rule| Kinesis[Kinesis Data Firehose]
+    Kinesis --> S3[Amazon S3]
+    S3 --> QuickSight[Amazon QuickSight]
+    IoTCore -->|IoT Rule| Lambda[AWS Lambda]
+    Lambda --> SNS[Amazon SNS]
+    
+    subgraph Security Management
+        KMS[AWS KMS]
+        ACM[AWS Certificate Manager]
+        IAM[AWS IAM]
+    end
 
 
 1. **IoT Devices** securely connect to **AWS IoT Core** over TLS.  
