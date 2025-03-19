@@ -1,3 +1,24 @@
+# **Solution Architecture Document**
+
+## **1. Overview**
+This solution enables real-time monitoring of energy consumption across IoT devices in a smart apartment environment. It uses AWS IoT Core for secure ingestion, AWS Lambda and Amazon SNS for immediate alerts, and Amazon Kinesis Data Firehose plus Amazon S3 for large-scale data storage and visualization in Amazon QuickSight.
+
+### **Objectives**
+- **Real-time Alerts:** Detect threshold breaches and notify relevant stakeholders instantly.  
+- **Scalable Data Ingestion:** Collect large volumes of IoT data without performance bottlenecks.  
+- **Analytics & Visualization:** Provide historical and near real-time insights via Amazon QuickSight.  
+- **Security:** Enforce end-to-end encryption, strict IAM policies, and certificate-based device authentication.  
+- **Cost Efficiency:** Leverage managed, serverless services that scale on demand and incur pay-per-use pricing.
+
+---
+
+## **2. High-Level Architecture**
+
+IoT Edge | | (TLS, MQTT/HTTPS) v AWS IoT Core --- IoT Rule ---> Kinesis Data Firehose ---> Amazon S3 ---> QuickSight |
++--- IoT Rule ---> AWS Lambda ---> Amazon SNS
+
+[ Security Management: AWS KMS, AWS Certificate Manager, AWS IAM ]
+
 
 1. **IoT Devices** securely connect to **AWS IoT Core** over TLS.  
 2. **IoT Rule Engine** checks if data meets specific thresholds:  
@@ -135,7 +156,7 @@ This architecture provides a robust, scalable, and cost-effective solution for r
 - **Modular & Fault-Tolerant:** Managed infrastructure with Terraform(IaC)
 
 ### **Potential Extensions**
-1. **Data Batching(Within IoT Core)**: Utilizing
+1. **Data Batching(Within IoT Core)**: Utilizing batch processing on the Edge(IoT device level), by local bufering, making use of AWS IoT Greengrass and message queueing, multiple events can be stored in edge device memory  and then published in one MQTT message, effectively reducing the number of invocations(calls made) to downstream services such as AWS Lambda etc.
 3. **Edge Processing (AWS IoT Greengrass)**: Reduce cloud latency by running analytics and local actions at the edge.
 
 ---
