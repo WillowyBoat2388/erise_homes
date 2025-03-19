@@ -8,11 +8,13 @@ resource "aws_quicksight_data_source" "iot_data_source" {
     s3 {
       manifest_file_location {
         bucket = var.s3_bucket_arn
-        key    = aws_s3_object.example.key
+        key    = var.s3_bucket
       }
-      role_arn = var.qwksight_role_arn
     }
   }
-
   type = "S3"
+}
+
+output "quicksight_data_source_id" {
+  value = aws_quicksight_data_source.iot_data_source.id
 }

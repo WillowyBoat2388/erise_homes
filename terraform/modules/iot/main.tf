@@ -9,7 +9,7 @@ resource "aws_iot_topic_rule" "energy_rule" {
   s3 {
     role_arn    = var.iot_role_arn
     bucket_name = var.iot_rule_action_s3_bucket
-    key         = "iot-data/${topic()}/${timestamp()}.json"
+    key         = "iot-data/${aws_iot_topic_rule.energy_rule.name}/${timestamp()}.json"
     canned_acl  = "private"
   }
 

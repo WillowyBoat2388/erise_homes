@@ -20,11 +20,6 @@ output "data_bucket_name" {
   value       =module.s3.bucket_name
 }
 
-output "s3_bucket_arn" {
-  description = "ARN of the S3 bucket for data storage"
-  value       = module.s3.bucket_arn
-}
-
 # output "firehose_delivery_stream_name" {
 #   description = "Name of the Kinesis Firehose delivery stream"
 #   value       = aws_kinesis_firehose_delivery_stream.erise_data_stream.name

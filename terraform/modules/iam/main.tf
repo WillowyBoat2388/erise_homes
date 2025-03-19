@@ -34,7 +34,7 @@ resource "aws_iam_policy" "iot_policy" {
     Statement = [{
       Action   = ["s3:PutObject", "s3:PutObjectAcl"],
       Effect   = "Allow",
-      Resource = "${module.s3.bucket_arn}/*"
+      Resource = "${var.s3_bucket_arn}/*"
     }]
   })
 }

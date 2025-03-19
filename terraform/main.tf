@@ -1,9 +1,3 @@
-# SNS Topic for Alerts
-resource "aws_sns_topic" "energy_alerts" {
-  name = "energy-alerts-topic"
-  kms_master_key_id = "alias/aws/sns"
-}
-
 # IAM Role for Lambda Function
 resource "aws_iam_role" "lambda_role" {
   name = "energy_monitor_lambda_role"
@@ -39,7 +33,7 @@ resource "aws_iam_policy" "lambda_invoke_sns_policy" {
       {
         Action   = ["sns:Publish"],
         Effect   = "Allow",
-        Resource = aws_sns_topic.energy_alerts.arn
+        Resource = module.sns.sns_topic_arn
       }
     ]
   })
@@ -68,10 +62,12 @@ resource "aws_lambda_function" "energy_monitor" {
 
   environment {
     variables = {
-      SNS_TOPIC_ARN = aws_sns_topic.energy_alerts.arn
+      SNS_TOPIC_ARN = module.sns.sns_topic_arn
     }
   }
 }
+
+data "aws_iot_endpoint" "current" {}
 
 # IoT Topic Rule to Trigger the Lambda Function When Energy Consumption Exceeds a Threshold
 resource "aws_iot_topic_rule" "energy_rule" {
@@ -95,13 +91,11 @@ resource "aws_lambda_permission" "allow_iot" {
   source_arn    = aws_iot_topic_rule.energy_rule.arn
 }
 
-
 terraform {
-  required_version = ">= 1.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 4.0"
+      version = ">= 5.5"
     }
   }
 }
@@ -117,10 +111,7 @@ module "s3" {
 
 module "iam" {
   source = "./modules/iam"
-}
-
-module "sns" {
-  source = "./modules/sns"
+  s3_bucket_arn = module.s3.bucket_arn
 }
 
 module "lambda" {
@@ -140,7 +131,7 @@ module "iot" {
 
 module "quicksight" {
   source        = "./modules/quicksight"
-  qwksight_role_arn = module.iam.iot_role_arn
+  s3_bucket = module.s3.bucket_name
   s3_bucket_arn = module.s3.bucket_arn
 }
 
@@ -149,3 +140,8 @@ module "secrets" {
   s3_bucket_name        = module.s3.bucket_name
   lambda_function_name  = var.lambda_function_name
 }
+
+module "sns" {
+  source = "./modules/sns"
+}
+  
