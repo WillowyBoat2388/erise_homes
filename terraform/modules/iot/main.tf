@@ -8,7 +8,7 @@ resource "aws_iot_topic_rule" "energy_rule" {
   # Action: Write to S3
   s3 {
     role_arn    = var.iot_role_arn
-    bucket_name = var.s3_bucket_name
+    bucket_name = var.iot_rule_action_s3_bucket
     key         = "iot-data/${topic()}/${timestamp()}.json"
     canned_acl  = "private"
   }

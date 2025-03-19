@@ -1,7 +1,3 @@
-output "s3_bucket_arn" {
-  value = module.s3.bucket_arn
-}
-
 output "lambda_function_name" {
   value = module.lambda.lambda_function_name
 }
@@ -19,43 +15,31 @@ output "iot_endpoint" {
   value       = data.aws_iot_endpoint.current.endpoint_address
 }
 
-output "iot_certificate_pem" {
-  description = "PEM content of the generated IoT certificate"
-  value       = aws_iot_certificate.erise_cert.certificate_pem
-  sensitive   = true
-}
-
-output "iot_certificate_private_key" {
-  description = "Private key for the IoT certificate"
-  value       = aws_iot_certificate.erise_cert.private_key
-  sensitive   = true
-}
-
 output "data_bucket_name" {
   description = "Name of the S3 bucket for data storage"
-  value       = aws_s3_bucket.erise_data_bucket.bucket
+  value       =module.s3.bucket_name
 }
 
-output "data_bucket_arn" {
+output "s3_bucket_arn" {
   description = "ARN of the S3 bucket for data storage"
-  value       = aws_s3_bucket.erise_data_bucket.arn
+  value       = module.s3.bucket_arn
 }
 
-output "firehose_delivery_stream_name" {
-  description = "Name of the Kinesis Firehose delivery stream"
-  value       = aws_kinesis_firehose_delivery_stream.erise_data_stream.name
-}
+# output "firehose_delivery_stream_name" {
+#   description = "Name of the Kinesis Firehose delivery stream"
+#   value       = aws_kinesis_firehose_delivery_stream.erise_data_stream.name
+# }
 
-output "kms_key_id" {
-  description = "ID of the KMS key for data encryption"
-  value       = aws_kms_key.erise_data_key.key_id
-}
+# output "kms_key_id" {
+#   description = "ID of the KMS key for data encryption"
+#   value       = aws_kms_key.erise_data_key.key_id
+# }
 
-output "kms_key_alias" {
-  description = "Alias of the KMS key for data encryption"
-  value       = aws_kms_alias.erise_data_key_alias.name
-}
-# This data source gets the IoT endpoint
-data "aws_iot_endpoint" "current" {
-  endpoint_type = "iot:Data-ATS"
-}
+# output "kms_key_alias" {
+#   description = "Alias of the KMS key for data encryption"
+#   value       = aws_kms_alias.erise_data_key_alias.name
+# }
+# # This data source gets the IoT endpoint
+# data "aws_iot_endpoint" "current" {
+#   endpoint_type = "iot:Data-ATS"
+# }

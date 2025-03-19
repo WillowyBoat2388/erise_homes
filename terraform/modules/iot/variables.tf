@@ -1,4 +1,4 @@
-variable "s3_bucket_name" {
+variable "iot_rule_action_s3_bucket" {
   description = "S3 bucket name for IoT rule action"
   type        = string
 }

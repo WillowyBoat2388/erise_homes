@@ -1,6 +1,7 @@
 # SNS Topic for Alerts
 resource "aws_sns_topic" "energy_alerts" {
   name = "energy-alerts-topic"
+  kms_master_key_id = "alias/aws/sns"
 }
 
 # IAM Role for Lambda Function
@@ -135,6 +136,12 @@ module "iot" {
   iot_rule_action_s3_bucket  = module.s3.bucket_name
   lambda_function_arn        = module.lambda.lambda_function_arn
   iot_role_arn               = module.iam.iot_role_arn
+}
+
+module "quicksight" {
+  source        = "./modules/quicksight"
+  qwksight_role_arn = module.iam.iot_role_arn
+  s3_bucket_arn = module.s3.bucket_arn
 }
 
 module "secrets" {
