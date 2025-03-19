@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
 # SNS Topic for Alerts
 resource "aws_sns_topic" "energy_alerts" {
   name = "energy-alerts-topic"
@@ -113,14 +109,6 @@ provider "aws" {
   region = var.aws_region
 }
 
-module "provider" {
-  source = "./modules/provider"
-}
-
-module "network" {
-  source = "./modules/network"
-}
-
 module "s3" {
   source      = "./modules/s3"
   bucket_name = var.s3_bucket_name
@@ -142,8 +130,8 @@ module "lambda" {
   sns_topic_arn         = module.sns.sns_topic_arn
 }
 
-module "iot_core" {
-  source                     = "./modules/iot_core"
+module "iot" {
+  source                     = "./modules/iot"
   iot_rule_action_s3_bucket  = module.s3.bucket_name
   lambda_function_arn        = module.lambda.lambda_function_arn
   iot_role_arn               = module.iam.iot_role_arn
@@ -153,9 +141,4 @@ module "secrets" {
   source                = "./modules/secrets"
   s3_bucket_name        = module.s3.bucket_name
   lambda_function_name  = var.lambda_function_name
-}
-
-module "quicksight" {
-  source        = "./modules/quicksight"
-  s3_bucket_arn = module.s3.bucket_arn
 }
